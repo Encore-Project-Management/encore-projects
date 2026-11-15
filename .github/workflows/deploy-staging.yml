@@ -1,0 +1,57 @@
+# Publishes the `staging` branch to the separate `<org>/staging` repository,
+# which serves the preview site at https://<org>.github.io/staging/
+#
+# Requires a repository secret STAGING_DEPLOY_KEY: the private half of an SSH
+# deploy key that has write access to the `<org>/staging` repository only.
+name: Deploy staging
+
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: staging-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: staging
+
+      - name: Build site with noindex tag and STAGING banner
+        run: .github/scripts/build-site.sh _site staging
+
+      - name: Force-push to the staging repository
+        env:
+          STAGING_DEPLOY_KEY: ${{ secrets.STAGING_DEPLOY_KEY }}
+          STAGING_REPO: ${{ github.repository_owner }}/staging
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          if [ -z "$STAGING_DEPLOY_KEY" ]; then
+            echo "::error::The STAGING_DEPLOY_KEY secret is not set. See "Setup steps" in TODO.md."
+            exit 1
+          fi
+
+          mkdir -p ~/.ssh
+          printf '%s\n' "$STAGING_DEPLOY_KEY" > ~/.ssh/staging_deploy_key
+          chmod 600 ~/.ssh/staging_deploy_key
+          # GitHub's published SSH host key (https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints)
+          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > ~/.ssh/known_hosts
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/staging_deploy_key -o IdentitiesOnly=yes -o UserKnownHostsFile=~/.ssh/known_hosts -o StrictHostKeyChecking=yes"
+
+          cd _site
+          git init --quiet --initial-branch=main
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          git commit --quiet --message "Staging build of ${SOURCE_SHA}"
+          git push --force "git@github.com:${STAGING_REPO}.git" main
+
+          rm -f ~/.ssh/staging_deploy_key
