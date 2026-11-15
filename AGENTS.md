@@ -82,8 +82,8 @@ Only add testimonials the owner has supplied. Never write or embellish one.
 The Testimonials section in `index.html` is hidden inside an HTML comment until real ones exist.
 
 - **First real testimonial:** in the `TESTIMONIALS (HIDDEN)` block, replace the `TODO` name and quote,
-  then un-hide the section by ending the explanatory comment with `-->` just before the line `TESTIMONIALS-START`
-  and deleting the `TESTIMONIALS-START` and `TESTIMONIALS-END -->` lines. Also un-comment the Testimonials link in the header navigation,
+  then un-hide the section by deleting the whole line that contains `TESTIMONIALS-START`
+  and the whole line that contains `TESTIMONIALS-END`. Also un-comment the Testimonials link in the header navigation,
   and remove the testimonials row from `TODO.md`.
 - **Each further testimonial:** copy one whole block and paste it below the last one:
 
