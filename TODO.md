@@ -38,11 +38,14 @@ Also removed from the Wix version, with no action needed unless you want them ba
       (That repo only receives finished files and has no workflow of its own, so "GitHub Actions" would publish nothing there.)
 - [ ] Enable Pages on this repo: Settings → Pages → Source = "GitHub Actions".
 - [ ] Add branch protection on `main` in this repo: require a pull request before merging.
+- [ ] In that branch protection rule, also tick "Require status checks to pass" and choose the `check` job, so a pull request that breaks the rules in `AGENTS.md` cannot be merged.
+- [ ] Recommended: make `staging` the default branch (Settings → General → Default branch). AI tools such as Codex start from the default branch and aim their pull requests at it, so this makes the safe route the automatic one. The live site still publishes from `main`.
+- [ ] When merging `staging` into `main`, use "Create a merge commit" (not squash or rebase), so the two branches stay in step.
 - [ ] Create the Formspree form at https://formspree.io and put its ID in `index.html` (item 8 above).
 - [ ] Fill in the content TODOs above.
 - [ ] **Only once the new site is approved** (this takes the Wix site offline):
   - [ ] In this repo, Settings → Pages → Custom domain = `encoreprojects.co.uk`.
   - [ ] DNS: four `A` records for `encoreprojects.co.uk` pointing at GitHub Pages:
         `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`.
-  - [ ] DNS: a `CNAME` record for `www` pointing at `<org>.github.io` (the organisation's GitHub Pages hostname).
+  - [ ] DNS: a `CNAME` record for `www` pointing at `encore-project-management.github.io`.
   - [ ] When DNS has updated and GitHub shows the certificate is ready, tick "Enforce HTTPS" in Settings → Pages.

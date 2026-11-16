@@ -1,0 +1,43 @@
+# Runs on every pull request. Enforces the rules in AGENTS.md so a mistake is
+# caught before a human is asked to review it.
+name: Checks
+
+on:
+  pull_request:
+    branches: [main, staging]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: The live site only accepts changes from staging
+        if: github.base_ref == 'main' && github.head_ref != 'staging'
+        run: |
+          echo "::error::Pull requests into main must come from the staging branch. Re-open this pull request against staging instead. See AGENTS.md."
+          exit 1
+
+      - name: The original Wix export has not been changed
+        run: |
+          git fetch --quiet --depth=1 origin "${{ github.base_ref }}"
+          if ! git diff --quiet FETCH_HEAD HEAD -- _wix-export; then
+            echo "::error::Files in _wix-export/ were changed. That folder is reference only. See AGENTS.md."
+            exit 1
+          fi
+
+      - name: All paths are relative (the site must also work under /staging/)
+        run: |
+          if grep -nE '(src|href|action)="/[^/]' *.html || grep -nE 'url\(["'"'"']?/' assets/css/*.css; then
+            echo "::error::Absolute paths found (listed above). Use relative paths such as assets/img/photo.jpg."
+            exit 1
+          fi
+
+      - name: Production build has no staging markers
+        run: .github/scripts/build-site.sh "$RUNNER_TEMP/site-prod" prod
+
+      - name: Staging build works
+        run: .github/scripts/build-site.sh "$RUNNER_TEMP/site-staging" staging
