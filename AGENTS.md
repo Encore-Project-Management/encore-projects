@@ -7,7 +7,7 @@ not developers. Keep everything simple.
 ## The rules
 
 1. **Always work on the `staging` branch, or a branch made from it.** Never push to `main`.
-2. **Going live means a pull request from `staging` into `main`, merged by a human.** Never merge it yourself.
+2. **Going live means a pull request from `staging` into `main`, merged by a human.** Never merge it yourself, and never open a pull request into `main` from any other branch.
 3. **Keep changes small.** One request, one small change. Do not tidy up or restructure things you were not asked to change.
 4. **Describe the change plainly in the pull request**, for a non-technical reader:
    what a visitor will see differently, and on which part of the page. No jargon.
@@ -15,16 +15,76 @@ not developers. Keep everything simple.
    If something is missing, leave a `TODO:` comment in the HTML and add it to `TODO.md`.
 6. **No frameworks, no build step, no new dependencies, no tracking or analytics scripts.**
    The site is plain HTML, CSS and a little vanilla JavaScript on purpose.
+7. **Leave the plumbing alone** unless the request is specifically about it: `.github/`, `CNAME`, `robots.txt`, `sitemap.xml` and `_wix-export/`.
+8. **If the request is unclear, or would need something you do not have, stop and ask.** Do not guess.
+
+## Step by step: how to make a change
+
+Follow these steps in order, every time.
+
+1. **Start from the latest `staging`.**
+   ```bash
+   git fetch origin
+   git checkout staging
+   git pull origin staging
+   ```
+   Then make sure `staging` contains everything that is live: run `git merge origin/main`.
+   Normally this says "Already up to date" or fast-forwards. If it reports conflicts, stop and ask the human.
+
+2. **Choose where to commit.**
+   - If your tool lets you push to `staging` directly, commit there.
+   - If your tool makes you work on its own branch (Codex and Claude Code on the web usually do), create that branch **from `staging`**, and open your pull request **into `staging`**. Check the base branch before you submit. If the tool chose `main` as the base, change it to `staging`.
+
+3. **Make the change.** Edit only what was asked for. See "Common tasks" below.
+
+4. **Check it.** Go through "Checking your work" below.
+
+5. **Commit with a plain message** saying what changed for a visitor, for example
+   `Update About section with years of experience`. One change per commit. Never rewrite history or force-push `staging`.
+
+6. **Get it onto `staging`.** Push to `staging`, or have your pull request into `staging` merged (you may merge a pull request into `staging` yourself if you are able to; if not, ask the human to).
+
+7. **Confirm the preview updated.** Every push to `staging` runs the "Deploy staging" workflow (about a minute).
+   Check that it succeeded, then look at the change on https://encore-project-management.github.io/staging/
+   If the workflow failed, read its log, fix the cause if it is in your change, and otherwise tell the human. Do not work around it.
+
+8. **Ask for it to go live.** Look for an open pull request from `staging` into `main`.
+   - If one is already open, your change has been added to it automatically. Update its description so it covers everything in it. Do not open a second one.
+   - If none is open, open one: base `main`, compare `staging`. Fill in the template for a non-technical reader.
+
+9. **Stop there and report back.** Tell the human, in plain words: what changed, the preview link, the pull request link, and anything they need to decide or supply. A human reviews the preview and merges. The live site updates a minute or two after they merge.
+
+### You are finished when
+
+- the change is on `staging` and the "Deploy staging" workflow passed;
+- you have seen the change on the preview site (or said clearly that you could not view it);
+- there is exactly one open pull request from `staging` into `main` describing it, with its checks passing;
+- `TODO.md` is up to date (new placeholders added, resolved ones removed);
+- you have not merged anything into `main`.
+
+### Urgent fixes
+
+There is no shortcut. An urgent fix follows the same steps; it is simply the only change in the pull request.
+
+### Things only a human can do
+
+Do not attempt these; ask the human and add them to `TODO.md` if they are needed:
+repository settings (Pages, branch protection, secrets, deploy keys), DNS for the domain, the Formspree account,
+supplying real business content, and merging into `main`.
 
 ## How publishing works
 
 | Branch | Publishes to | How |
 |--------|--------------|-----|
-| `staging` | The preview site, `https://<org>.github.io/staging/` | `.github/workflows/deploy-staging.yml` runs on every push. It adds a "noindex" tag and a red STAGING banner, then pushes the files to the separate `<org>/staging` repository. |
+| `staging` | The preview site, https://encore-project-management.github.io/staging/ | `.github/workflows/deploy-staging.yml` runs on every push. It adds a "noindex" tag and a red STAGING banner, then pushes the files to the separate `Encore-Project-Management/staging` repository. |
 | `main` | The live site, `https://encoreprojects.co.uk` | `.github/workflows/deploy-prod.yml` runs on every push (that is, when a human merges a pull request). |
 
 Both workflows use `.github/scripts/build-site.sh` to decide which files are published.
 Not published: `_wix-export/`, `.github/`, and all `.md` files. The staging site also leaves out `CNAME`, `robots.txt` and `sitemap.xml`.
+
+Every pull request also runs `.github/workflows/checks.yml`. It fails if a pull request into `main` comes from any branch other than `staging`, if `_wix-export/` was changed, if an absolute path was added, or if the site does not build. If it fails, fix the cause; do not edit the check.
+
+When a human merges `staging` into `main`, GitHub adds a merge commit to `main`. That is why step 1 above merges `main` back into `staging` before starting.
 
 Do not add the noindex tag or the STAGING banner to the HTML files yourself. The staging workflow adds them, and the production build fails if it finds them.
 
@@ -40,6 +100,10 @@ assets/fonts/         The two fonts, self-hosted
 favicon.ico           Browser tab icon
 CNAME, robots.txt, sitemap.xml   Live-site settings
 TODO.md               Open items and setup steps for the humans
+AGENTS.md             These instructions (CLAUDE.md just points here)
+.github/workflows/    deploy-staging.yml, deploy-prod.yml, checks.yml
+.github/scripts/build-site.sh   Chooses which files are published
+.github/pull_request_template.md   The pull request description outline
 _wix-export/          The original Wix site, kept for reference only. Never edit or publish it.
 ```
 
@@ -120,6 +184,11 @@ Before opening a pull request, check that:
 
 - the page looks right at phone width (about 390px) and desktop width;
 - the navigation links and the discovery-call button still scroll to the right sections;
+- every image you added has `width`, `height` and `alt`;
+- if you added a page, it has its own `<title>` and description, uses the same header and footer, and is listed in `sitemap.xml`;
+- the browser console shows no errors;
 - you have not added absolute paths, a noindex tag, or anything inside `_wix-export/`.
+
+If you cannot open a browser, say so in the pull request rather than claiming the page was checked.
 
 To see exactly what will be published: `.github/scripts/build-site.sh _site prod` (then delete the `_site` folder).
