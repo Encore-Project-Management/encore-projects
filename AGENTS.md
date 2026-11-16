@@ -40,7 +40,7 @@ Follow these steps in order, every time.
 4. **Check it.** Go through "Checking your work" below.
 
 5. **Commit with a plain message** saying what changed for a visitor, for example
-   `Update About section with years of experience`. One change per commit. Never rewrite history or force-push `staging`.
+   `Update About Me wording`. One change per commit. Never rewrite history or force-push `staging`.
 
 6. **Get it onto `staging`.** Push to `staging`, or have your pull request into `staging` merged (you may merge a pull request into `staging` yourself if you are able to; if not, ask the human to).
 
@@ -112,14 +112,16 @@ _wix-export/          The original Wix site, kept for reference only. Never edit
 | Section | Marker in the file | `id` |
 |---------|--------------------|------|
 | Header and navigation | `HEADER` | |
-| Hero (headline, intro, "Book a Free Discovery Call" button) | `HERO` | `home` |
-| About ("Who We Are") | `ABOUT` | `about` |
-| Our Approach | `OUR APPROACH` | `approach` |
+| Home: headline "Experience makes a difference.", intro, "Let's talk" button | `HOME (HERO)` | `home` |
+| Home: "A fresh perspective. Practical next steps." | `HOME (SUPPORTING SECTION)` | |
+| About Me | `ABOUT ME` | `about-me` |
+| How I Can Help (four items) | `HOW I CAN HELP` | `how-i-can-help` |
+| My Approach (four numbered steps) | `MY APPROACH` | `my-approach` |
 | Testimonials (currently hidden) | `TESTIMONIALS (HIDDEN)` | `testimonials` |
 | Contact form | `CONTACT` | `contact` |
 | Footer | `FOOTER` | |
 
-Navigation links and the discovery-call button scroll to a section using its `id` (for example `href="#contact"`).
+Navigation links and the buttons scroll to a section using its `id` (for example `href="#contact"`).
 
 ## Where things live
 
@@ -162,7 +164,7 @@ The Testimonials section in `index.html` is hidden inside an HTML comment until 
 There is **no pricing on the site at the moment** (the original site had none).
 
 - If asked to *change* a price, first check `index.html`: if a pricing section has been added since, it will be marked `PRICING` and the prices are plain text inside it. Change only the numbers you were asked to change.
-- If asked to *add* pricing, add a new `<section id="pricing" class="section section--cream">` between Our Approach and Contact, marked with a `PRICING` comment like the other sections, reusing existing styles (`h2`, `h3`, `p`). Use only the prices the owner gives you, written in pounds (for example `£450 per day`), and say in the pull request exactly which prices were added.
+- If asked to *add* pricing, add a new `<section id="pricing" class="section section--cream">` between My Approach and Contact, marked with a `PRICING` comment like the other sections, reusing existing styles (`h2`, `h3`, `p`). Use only the prices the owner gives you, written in pounds (for example `£450 per day`), and say in the pull request exactly which prices were added.
 
 ### Change the contact form
 The fields are in the Contact section of `index.html`. Each field's `name` is the label shown in the email Formspree sends. Leave the hidden `_gotcha` field alone: it is the spam trap.
@@ -170,6 +172,7 @@ The fields are in the Contact section of `index.html`. Each field's `name` is th
 ## Style conventions
 
 - **Paths are always relative** (`assets/img/logo.png`, never `/assets/img/logo.png`). The site must work both at the domain root and under `/staging/`. The only absolute URLs are the `canonical` and Open Graph tags in `<head>`, which must point at the live domain.
+- **Voice:** the site is one person, Paul Crockett, speaking for himself. Write "I", "me" and "my", never "we", "our" or "our team", and address the visitor as "you". Warm, plain, professional British English ("organisations", "programme"). No jargon, no promises of results, and nothing about fees, free consultations, response times, past clients or career history unless the owner has supplied it. The headline "Experience makes a difference." is fixed wording.
 - **HTML:** two-space indentation, semantic tags (`header`, `nav`, `main`, `section`, `footer`), one `<h1>` per page, headings in order. British English spelling ("organisations").
 - **CSS:** mobile-first. Base rules are for phones; the single `@media (min-width: 48rem)` block at the bottom handles wider screens. Use the existing variables (`--lime`, `--cream`, `--navy`, `--sage`, `--text-body` and so on) instead of new hard-coded colours or sizes. Plain class names, no IDs for styling, no inline styles.
 - **JavaScript:** avoid it. If it is truly needed, add it to `assets/js/main.js` in plain vanilla JS with a comment saying what it does.

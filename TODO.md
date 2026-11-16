@@ -10,14 +10,28 @@ Search the code for `TODO:` to find each spot.
 
 | # | What | Where | Current state |
 |---|------|-------|---------------|
-| 1 | Years of experience and industries. The Wix text was: "Led by a seasoned project manager with over [X] years of experience across [industries/clients if relevant]" | `index.html`, About section | Sentence is commented out |
-| 2 | Phone number (Wix placeholder was 123-456-7890) | `index.html`, footer | Contact block is commented out |
-| 3 | Email address (Wix placeholder was info@mysite.com) | `index.html`, footer | Contact block is commented out |
+| 1 | Optional: a real portrait photo of Paul for the About Me section (never a stock or generated photo of a person) | `index.html`, About Me section | Illustration shown instead |
+| 2 | Phone number, if one should be shown (Wix placeholder was 123-456-7890) | `index.html`, footer | Contact block is commented out |
+| 3 | Email address, if one should be shown (Wix placeholder was info@mysite.com) | `index.html`, footer | Contact block is commented out |
 | 4 | Postal address, if one should be shown (Wix placeholder was 500 Terry Francine St. San Francisco, CA 94158) | `index.html`, footer | Contact block is commented out |
 | 5 | Real testimonials. The three on the Wix site (mentioning "A. Oliveira") were template filler and were not copied over | `index.html`, Testimonials section | Whole section is commented out. See "How to add a testimonial" in `AGENTS.md` |
 | 6 | Social media links, if Encore Projects has its own accounts. The Wix site linked to Wix's own Facebook, Twitter and TikTok, so these were removed | `index.html`, footer | Removed |
-| 7 | Privacy policy text | `privacy.html` | Placeholder outline only |
-| 8 | Formspree form ID: replace `<FORM_ID>` in the form's `action` | `index.html`, Contact section | Form shows "not set up yet" when submitted |
+| 7 | Privacy policy text | `privacy.html` | Placeholder outline only. Should be written before going live, because the form collects names and email addresses |
+| 8 | Formspree form ID: replace `<FORM_ID>` in the form's `action` | `index.html`, Contact section | **Must be done before going live.** Until then the form shows "could not be sent" and no message reaches anyone |
+
+## Before going live
+
+The contact form is the only way for a visitor to get in touch, so the site should not
+replace the live one until items 7 and 8 are done and one real test message has been
+sent and received by the owner.
+
+Removed in the November 2026 rewrite (the first-person "Experience makes a difference." version):
+
+- The "Plan, Deliver, Embed" graphic. The original file is still in `_wix-export/`.
+- The optional Phone field on the contact form, replaced by an optional Business name field.
+- The "Book a Free Discovery Call" button, because no free call has been confirmed.
+- The old section addresses `#about` and `#approach` are now `#about-me` and `#my-approach`.
+  A link to an old address still opens the site, at the top of the page.
 
 Also removed from the Wix version, with no action needed unless you want them back:
 
