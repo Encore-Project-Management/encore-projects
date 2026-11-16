@@ -31,7 +31,7 @@
 
     // The Formspree form ID has not been filled in yet (see TODO.md).
     if (form.action.indexOf('FORM_ID') !== -1) {
-      showStatus('Sorry, the contact form is not set up yet. Please try again later.', 'error');
+      showStatus('Your message could not be sent. The contact form is not set up yet.', 'error');
       return;
     }
 
@@ -48,10 +48,10 @@
           throw new Error('Formspree returned ' + response.status);
         }
         form.reset();
-        showStatus('Thank you. Your message has been sent and we will be in touch soon.', 'success');
+        showStatus('Thank you. Your message has been sent.', 'success');
       })
       .catch(function () {
-        showStatus('Sorry, something went wrong and your message was not sent. Please try again.', 'error');
+        showStatus('Your message could not be sent. Please try again.', 'error');
       })
       .then(function () {
         button.disabled = false;
