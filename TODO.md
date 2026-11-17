@@ -16,13 +16,11 @@ Search the code for `TODO:` to find each spot.
 | 4 | Postal address, if one should be shown (Wix placeholder was 500 Terry Francine St. San Francisco, CA 94158) | `index.html`, footer | Contact block is commented out |
 | 5 | Real testimonials. The three on the Wix site (mentioning "A. Oliveira") were template filler and were not copied over | `index.html`, Testimonials section | Whole section is commented out. See "How to add a testimonial" in `AGENTS.md` |
 | 6 | Social media links, if Encore Projects has its own accounts. The Wix site linked to Wix's own Facebook, Twitter and TikTok, so these were removed | `index.html`, footer | Removed |
-| 7 | Privacy policy text | `privacy.html` | Placeholder outline only. Should be written before going live, because the form collects names and email addresses |
-| 8 | Formspree form ID: replace `<FORM_ID>` in the form's `action` | `index.html`, Contact section | **Must be done before going live.** Until then the form shows "could not be sent" and no message reaches anyone |
 
 ## Before going live
 
 The contact form is the only way for a visitor to get in touch, so the site should not
-replace the live one until items 7 and 8 are done and one real test message has been
+replace the live one until one real test message has been
 sent and received by the owner.
 
 Removed in the November 2026 rewrite (the first-person "Experience makes a difference." version):
@@ -55,7 +53,6 @@ Also removed from the Wix version, with no action needed unless you want them ba
 - [ ] In that branch protection rule, also tick "Require status checks to pass" and choose the `check` job, so a pull request that breaks the rules in `AGENTS.md` cannot be merged.
 - [ ] Recommended: make `staging` the default branch (Settings → General → Default branch). AI tools such as Codex start from the default branch and aim their pull requests at it, so this makes the safe route the automatic one. The live site still publishes from `main`.
 - [ ] When merging `staging` into `main`, use "Create a merge commit" (not squash or rebase), so the two branches stay in step.
-- [ ] Create the Formspree form at https://formspree.io and put its ID in `index.html` (item 8 above).
 - [ ] Fill in the content TODOs above.
 - [ ] **Only once the new site is approved** (this takes the Wix site offline):
   - [ ] In this repo, Settings → Pages → Custom domain = `encoreprojects.co.uk`.
