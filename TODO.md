@@ -16,12 +16,11 @@ Search the code for `TODO:` to find each spot.
 | 4 | Postal address, if one should be shown (Wix placeholder was 500 Terry Francine St. San Francisco, CA 94158) | `index.html`, footer | Contact block is commented out |
 | 5 | Real testimonials. The three on the Wix site (mentioning "A. Oliveira") were template filler and were not copied over | `index.html`, Testimonials section | Whole section is commented out. See "How to add a testimonial" in `AGENTS.md` |
 | 6 | Social media links, if Encore Projects has its own accounts. The Wix site linked to Wix's own Facebook, Twitter and TikTok, so these were removed | `index.html`, footer | Removed |
-| 7 | Privacy policy text | `privacy.html` | Placeholder outline only. Should be written before going live, because the form collects names and email addresses |
 
 ## Before going live
 
 The contact form is the only way for a visitor to get in touch, so the site should not
-replace the live one until item 7 is done and one real test message has been
+replace the live one until one real test message has been
 sent and received by the owner.
 
 Removed in the November 2026 rewrite (the first-person "Experience makes a difference." version):
